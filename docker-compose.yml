@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:15-3.4
+    container_name: todo-app-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"  # Use dedicated port 5433 to follow Blockbase pattern and avoid conflicts
+    environment:
+      POSTGRES_USER: blockbase
+      POSTGRES_PASSWORD: blockbase_secure_2025
+      POSTGRES_DB: todo_app
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    volumes:
+      - todo_app_postgres_data:/var/lib/postgresql/data
+      - ./backend/database/init:/docker-entrypoint-initdb.d  # Auto-run schema and seed scripts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blockbase -d todo_app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - todo-app-network
+
+volumes:
+  todo_app_postgres_data:
+    name: todo_app_postgres_data
+    driver: local
+
+networks:
+  todo-app-network:
+    name: todo-app-network
+    driver: bridge
