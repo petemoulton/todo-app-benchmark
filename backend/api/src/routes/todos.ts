@@ -8,7 +8,7 @@ import {
   createTodoSchema,
   updateTodoSchema,
   listTodosQuerySchema,
-  uuidSchema,
+  uuidParamsSchema,
   type CreateTodoInput,
   type UpdateTodoInput,
   type ListTodosQuery,
@@ -135,7 +135,7 @@ router.post(
  */
 router.get(
   '/:id',
-  validateParams(uuidSchema.transform((id) => ({ id }))),
+  validateParams(uuidParamsSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -161,7 +161,7 @@ router.get(
  */
 router.patch(
   '/:id',
-  validateParams(uuidSchema.transform((id) => ({ id }))),
+  validateParams(uuidParamsSchema),
   validateBody(updateTodoSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -231,7 +231,7 @@ router.patch(
  */
 router.delete(
   '/:id',
-  validateParams(uuidSchema.transform((id) => ({ id }))),
+  validateParams(uuidParamsSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -257,7 +257,7 @@ router.delete(
  */
 router.post(
   '/:id/toggle',
-  validateParams(uuidSchema.transform((id) => ({ id }))),
+  validateParams(uuidParamsSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;

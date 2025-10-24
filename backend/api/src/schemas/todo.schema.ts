@@ -47,6 +47,13 @@ export const listTodosQuerySchema = z.object({
 export const uuidSchema = z.string().uuid('Invalid ID format');
 
 /**
+ * Schema for validating UUID in route params
+ */
+export const uuidParamsSchema = z.object({
+  id: uuidSchema,
+});
+
+/**
  * Type exports
  */
 export type CreateTodoInput = z.infer<typeof createTodoSchema>;

@@ -63,6 +63,26 @@ describe('validation middleware', () => {
 
       expect(mockNext).toHaveBeenCalledWith();
     });
+
+    it('should reject invalid UUID format', () => {
+      const schema = z.object({ id: z.string().uuid() });
+      const middleware = validateParams(schema);
+      const req = { params: { id: 'invalid-uuid' } } as unknown as Request;
+
+      middleware(req, mockRes, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(expect.any(ZodError));
+    });
+
+    it('should reject non-string UUID', () => {
+      const schema = z.object({ id: z.string().uuid() });
+      const middleware = validateParams(schema);
+      const req = { params: { id: 123 } } as unknown as Request;
+
+      middleware(req, mockRes, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(expect.any(ZodError));
+    });
   });
 });
 
